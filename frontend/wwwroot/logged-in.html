@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeQR - Your Memorial Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Manrope:wght@300;400;800&display=swap" rel="stylesheet">
+    <link href="css/site.css" rel="stylesheet">
+    <style>
+        .hero-memorial {
+            background:
+                linear-gradient(rgba(7, 24, 56, 0.78), rgba(7, 24, 56, 0.78)),
+                url('Images/example5.jpg') no-repeat center center;
+            background-size: cover;
+            padding: 160px 0;
+            color: white;
+        }
+        .logo-main { width: 520px; max-width: 90%; }
+        .hero-panel {
+            display: inline-block;
+            background: rgba(3, 12, 30, 0.72);
+            padding: 18px 24px 22px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(2px);
+        }
+        .hero-title {
+            color: #ffffff;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-shadow: 0 4px 14px rgba(0, 0, 0, 0.9);
+            margin-bottom: 0;
+        }
+        .btn-gold { background: #d4af37; color: #1d2d56; border: none; }
+        .btn-gold:hover { background: #c19b2b; color: #1d2d56; }
+        .btn-blue { background: #1d2d56; color: white; border: none; }
+        .btn-blue:hover { background: #0f1729; color: white; }
+    </style>
+</head>
+<body class="bg-white">
+    <nav class="navbar navbar-expand navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><img src="Images/logo.png" alt="LifeQR Logo" style="height:50px;"></a>
+            <div class="navbar-collapse d-flex justify-content-end" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="learn-more.html">Learn More</a></li>
+                    <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="bi bi-person-circle me-1"></i><span id="loggedInName">My Account</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="create-memorial.html"><i class="bi bi-plus-circle me-1"></i>Create Memorial</a></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right me-1"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="cart.html"><i class="bi bi-cart3 me-1"></i>Cart <span class="badge bg-danger">0</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-memorial text-center">
+        <div class="container">
+            <div class="hero-panel mb-5">
+                <img src="Images/logo.png" alt="LifeQR Logo" class="logo-main mb-3">
+                <h3 class="hero-title" style="font-size: 38px;">Welcome back, <span id="heroUserName">Friend</span></h3>
+            </div>
+            <div>
+                <a href="create-memorial.html" class="btn btn-gold btn-lg px-5 py-3 me-3 mb-3">Create a Memorial</a>
+                <a href="search.html" class="btn btn-gold btn-lg px-5 py-3 me-3 mb-3">Search Memorials</a>
+                <a href="products.html" class="btn btn-blue btn-lg px-5 py-3 mb-3">View Products</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5 py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 text-center">
+                <blockquote style="font-size: 27px; line-height: 40px; color: #1d2d56;">
+                    "The greatest gift we can give those we've lost is to ensure their story is told - forever cherished, never forgotten. Through Life's QR, we can celebrate their life and legacy, keeping their spirit alive for generations to come."
+                </blockquote>
+                <p class="fw-bold mb-2" style="font-size: 23px;">- Matt Fraser</p>
+                <div class="mb-4">
+                    <p><a href="#" class="text-decoration-none" style="color: #1d2d56;">4.9 / 5 based on 325 reviews</a></p>
+                </div>
+                <img src="Images/example1.jpg" alt="Memorial Product" class="img-fluid rounded shadow-lg mx-auto d-block" style="max-width: 460px; width: 100%;">
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-light py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 style="color: #1d2d56;">As Seen On</h2>
+            </div>
+            <div class="row text-center">
+                <div class="col-6 col-md-2 mb-3"><img src="Images/abcNews.png" class="img-fluid" alt="ABC News" style="height:80px; width:150px; object-fit:contain;"></div>
+                <div class="col-6 col-md-2 mb-3"><img src="Images/foxnews.png" class="img-fluid" alt="Fox News" style="height:80px; width:150px; object-fit:contain;"></div>
+                <div class="col-6 col-md-2 mb-3"><img src="Images/torontoStar.png" class="img-fluid" alt="Toronto Star" style="height:80px; width:150px; object-fit:contain;"></div>
+                <div class="col-6 col-md-2 mb-3"><img src="Images/logo_globalnews.png" class="img-fluid" alt="Global News" style="height:80px; width:150px; object-fit:contain;"></div>
+                <div class="col-6 col-md-2 mb-3"><img src="Images/canadaGeo.png" class="img-fluid" alt="Canadian Geographic" style="height:80px; width:150px; object-fit:contain;"></div>
+                <div class="col-6 col-md-2 mb-3"><img src="Images/Yahoo-Finance-Square-Logo.jpeg" class="img-fluid" alt="Yahoo Finance" style="height:80px; width:150px; object-fit:contain;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-5" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white;">
+        <div class="container">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-5 text-center">
+                    <img src="Images/example6.jpg" alt="Matt Fraser Special Edition Memorial Kit" class="img-fluid rounded shadow-lg" style="max-height: 420px; object-fit: cover;">
+                </div>
+                <div class="col-lg-7">
+                    <p class="mb-2 text-uppercase fw-bold" style="letter-spacing: 0.08em; color: #d4af37;">Matt Fraser x Life's QR</p>
+                    <h2 class="text-white mb-3">Matt Fraser's Official Memorial Kit</h2>
+                    <p class="mb-4">Matt Fraser and Life's QR bring you a simple, secure and beautiful way to honor your loved one with a digital memorial.</p>
+                    <h4 class="text-white mb-3">A Message From Matt</h4>
+                    <p class="mb-3">Losing a loved one is never easy. Start by writing their story and creating a meaningful place to honor them, then use Life's QR to share memories with photos, videos, and milestones that last for generations.</p>
+                    <blockquote class="mb-4" style="border-left: 4px solid #d4af37; padding-left: 14px; color: #e5e7eb;">
+                        "The greatest gift we can give those we've lost is to ensure their story is told - forever cherished, never forgotten."
+                    </blockquote>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="matt-fraser.html#shop" class="btn btn-gold btn-lg px-4 py-2">See What's Included</a>
+                        <a href="matt-fraser.html" class="btn btn-outline-light btn-lg px-4 py-2">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-4" style="color: #1d2d56;">Watch How It Works</h2>
+            <div class="ratio ratio-16x9 mb-4">
+                <iframe src="https://www.youtube.com/embed/yyUXeixzTII" title="Video" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <img src="Images/example2.jpg" alt="Products" class="img-fluid rounded">
+            </div>
+            <div class="col-md-6 d-flex align-items-center">
+                <div>
+                    <h2 style="color: #1d2d56;">A story remembered. A legacy preserved.</h2>
+                    <p>With Life's QR, you can easily create a personalized online tribute for your loved one - complete with photos, videos, and their life story. Place our weatherproof QR Sign on a headstone, urn, or memorial, and with one scan, visitors can instantly access the tribute.</p>
+                    <a href="learn-more.html" class="btn btn-gold btn-lg">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-5" style="color: #1d2d56;">Bring Their Story To Life</h2>
+            <div class="row">
+                <div class="col-md-4 text-center mb-4">
+                    <h3 style="color: #1d2d56; font-size: 21px;">Step 1: Purchase your memorial</h3>
+                    <img src="Images/example1.jpg" alt="Step 1" class="img-fluid rounded mb-3">
+                    <p>Select the QR Sign of your liking and we'll ship it to you.</p>
+                </div>
+                <div class="col-md-4 text-center mb-4">
+                    <h3 style="color: #1d2d56; font-size: 21px;">Step 2: Create your online tribute</h3>
+                    <img src="Images/example2.jpg" alt="Step 2" class="img-fluid rounded mb-3">
+                    <p>Scan the QR code and set up your memorial page with photos and stories.</p>
+                </div>
+                <div class="col-md-4 text-center mb-4">
+                    <h3 style="color: #1d2d56; font-size: 21px;">Step 3: Share your loved ones story</h3>
+                    <img src="Images/example1.jpg" alt="Step 3" class="img-fluid rounded mb-3">
+                    <p>Place your QR Sign and let visitors scan to view the memorial.</p>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="products.html" class="btn btn-gold btn-lg px-5 py-3">View Products</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-5" style="background: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1600&h=600&fit=crop') no-repeat center; background-size: cover; color: white; text-align: center;">
+        <div class="container">
+            <h2 class="mb-4">Partner Locations</h2>
+            <a href="https://www.google.com/maps/d/u/0/embed?mid=17jjh2Zv9JELFdzd_ioH71qJyHfnfFCE&ehbc=2E312F&ll=42.39477428263916%2C-94.49027440478898&z=5" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-lg px-5 py-3">View All</a>
+        </div>
+    </div>
+    <div class="py-5" style="background: #1d2d56; color: #ffffff;">
+        <div class="container text-center">
+            <h2 class="mb-3">Ready to build a tribute page?</h2>
+            <p class="mb-4">Use your account to create and manage a memorial for your loved one.</p>
+            <a href="create-memorial.html" class="btn btn-gold btn-lg px-5 py-3">Create Memorial Now</a>
+        </div>
+    </div>
+
+        <footer class="site-footer text-white py-5">
+        <div class="container text-center">
+            <img src="Images/buttomLogo.png" alt="LifeQR" class="site-footer-logo mb-3">
+            <div class="site-footer-links d-flex flex-wrap justify-content-center align-items-center gap-3 mb-3">
+                <a href="#" class="text-white-50 text-decoration-none">Facebook</a>
+                <a href="#" class="text-white-50 text-decoration-none">Instagram</a>
+                <a href="learn-more.html" class="text-white-50 text-decoration-none">Learn More</a>
+                <a href="#" class="text-white-50 text-decoration-none">FAQ</a>
+                <a href="search.html" class="text-white-50 text-decoration-none">Find Memorial</a>
+            </div>
+            <p class="mb-0">&copy; 2024 Life's QR</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        if (!loggedInUser) {
+            window.location.href = 'login.html';
+        } else {
+            document.getElementById('loggedInName').textContent = loggedInUser;
+            document.getElementById('heroUserName').textContent = loggedInUser;
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', function(event) {
+            event.preventDefault();
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>
+

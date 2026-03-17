@@ -1,0 +1,25 @@
+services:
+  webapp:
+    build: .
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=AppDb;Username=postgres;Password=YourStrong@Passw0rd
+      - ASPNETCORE_URLS=http://+:80
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+
+  postgres:
+    image: postgres:16
+    environment:
+      - POSTGRES_DB=AppDb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=YourStrong@Passw0rd
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
