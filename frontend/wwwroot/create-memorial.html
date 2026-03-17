@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Memorial - LifeQR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="css/site.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Manrope", sans-serif;
+            background:
+                radial-gradient(circle at 15% 15%, rgba(233, 209, 160, 0.25), transparent 40%),
+                radial-gradient(circle at 85% 0%, rgba(18, 52, 102, 0.22), transparent 34%),
+                linear-gradient(180deg, #f7f8fa 0%, #eef2f6 100%);
+            min-height: 100vh;
+        }
+        .memorial-shell {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .memorial-card {
+            border: 1px solid rgba(16, 39, 71, 0.28);
+            border-radius: 20px;
+            background: #ffffff;
+            box-shadow: 0 18px 40px rgba(16, 39, 71, 0.22);
+        }
+        .headline {
+            font-family: "Playfair Display", serif;
+            color: #122a4f;
+        }
+        .section-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #122a4f;
+            color: #ffffff;
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-size: 0.82rem;
+            letter-spacing: 0.02em;
+        }
+        .form-label {
+            font-weight: 800;
+            color: #1c3258;
+        }
+        .form-control {
+            border-radius: 12px;
+            border-color: #9eb3d0;
+            padding: 0.72rem 0.9rem;
+            background: #ffffff;
+            color: #102747;
+        }
+        .form-control:focus {
+            border-color: #1f4f8f;
+            box-shadow: 0 0 0 0.22rem rgba(31, 79, 143, 0.22);
+        }
+        .ai-output-textarea {
+            text-align: left;
+            line-height: 1.7;
+            resize: none;
+            overflow: hidden;
+            min-height: 160px;
+        }
+        .btn-create {
+            background: linear-gradient(135deg, #c9a646 0%, #b98d2c 100%);
+            border: none;
+            color: #102747;
+            font-weight: 700;
+            border-radius: 12px;
+            box-shadow: 0 10px 18px rgba(185, 141, 44, 0.26);
+        }
+        .btn-create:hover {
+            color: #102747;
+            transform: translateY(-1px);
+        }
+        .btn-ai {
+            border-radius: 999px;
+            border-color: #2f5f9d;
+            color: #2f5f9d;
+            font-weight: 600;
+        }
+        .ai-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(201, 166, 70, 0.18), transparent 30%),
+                rgba(10, 20, 37, 0.72);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1050;
+            padding: 14px;
+        }
+        .ai-modal-overlay.show {
+            display: flex;
+        }
+        .ai-modal-card {
+            width: 100%;
+            max-width: 700px;
+            max-height: min(90vh, 820px);
+            overflow-y: auto;
+            background: linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
+            border-radius: 18px;
+            border: 1px solid rgba(16, 39, 71, 0.12);
+            box-shadow: 0 24px 40px rgba(12, 27, 52, 0.4);
+            animation: modalIn 0.22s ease-out;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(8px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .ai-modal-headline {
+            font-family: "Playfair Display", serif;
+            color: #102747;
+        }
+        .ai-modal-subtitle {
+            color: #4a607f;
+        }
+        .ai-modal-section {
+            border: 1px solid #a7bfdc;
+            border-radius: 14px;
+            background: #f4f8fd;
+            padding: 14px 14px 4px;
+            margin-bottom: 12px;
+        }
+        .ai-step {
+            display: none;
+        }
+        .ai-step.show {
+            display: block;
+        }
+        .tone-choice {
+            border: 1px solid #cfdced;
+            border-radius: 12px;
+            padding: 10px 12px;
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-weight: 700;
+        }
+        .tone-choice:hover {
+            transform: translateY(-1px);
+        }
+        .tone-choice input {
+            margin-right: 8px;
+        }
+        .tone-choice.tone-warm {
+            background: linear-gradient(135deg, #ffe8e8 0%, #ffd1d1 100%);
+            border-color: #de8585;
+            color: #7d1f1f;
+            box-shadow: 0 8px 14px rgba(171, 54, 54, 0.2);
+        }
+        .tone-choice.tone-formal {
+            background: linear-gradient(135deg, #e7eefb 0%, #d6e5ff 100%);
+            border-color: #7ea3e6;
+            color: #183f7a;
+            box-shadow: 0 8px 14px rgba(62, 106, 182, 0.18);
+        }
+        .tone-choice.tone-celebratory {
+            background: linear-gradient(135deg, #e7f9ef 0%, #d1f2dd 100%);
+            border-color: #7dc79a;
+            color: #1c6a3e;
+            box-shadow: 0 8px 14px rgba(44, 138, 83, 0.18);
+        }
+        .tone-choice input[type="radio"]:checked + span {
+            text-decoration: underline;
+        }
+        .ai-modal-label {
+            font-weight: 800;
+            color: #19345d;
+            font-size: 0.93rem;
+            margin-bottom: 6px;
+        }
+        .ai-modal-input,
+        .ai-modal-select {
+            border-radius: 10px;
+            border: 1px solid #90adcf;
+            padding: 0.62rem 0.78rem;
+            background: #ffffff;
+        }
+        .ai-modal-input:focus,
+        .ai-modal-select:focus {
+            border-color: #2f5f9d;
+            box-shadow: 0 0 0 0.2rem rgba(47, 95, 157, 0.16);
+            outline: none;
+        }
+        .btn-ai-generate {
+            background: linear-gradient(135deg, #c9a646 0%, #b98d2c 100%);
+            border: none;
+            color: #102747;
+            font-weight: 700;
+            border-radius: 10px;
+            padding: 0.6rem 1rem;
+        }
+        .message-box {
+            position: fixed;
+            top: 96px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            max-width: 720px;
+            width: calc(100% - 24px);
+            border-radius: 14px;
+            padding: 14px 16px;
+            box-shadow: 0 16px 30px rgba(16, 39, 71, 0.34);
+            z-index: 1150;
+            display: none;
+            color: #0d223f;
+            background: #eaf1fb;
+            border: 2px solid #8aa9d6;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+        .message-box.show {
+            display: block;
+            animation: messagePop 0.22s ease-out;
+        }
+        .message-box.message-success {
+            background: #e5f8ee;
+            border-color: #58b884;
+            color: #0f5132;
+        }
+        .message-box.message-error {
+            background: #ffe9e9;
+            border-color: #df7a7a;
+            color: #842029;
+        }
+        .message-box.message-info {
+            background: #e8f0ff;
+            border-color: #5f88c9;
+            color: #102747;
+        }
+        .message-box::before {
+            content: "i";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            font-weight: 800;
+            margin-right: 10px;
+            vertical-align: middle;
+            background: rgba(16, 39, 71, 0.14);
+        }
+        .message-box.message-error::before {
+            content: "!";
+            background: rgba(132, 32, 41, 0.14);
+        }
+        .message-box.message-success::before {
+            content: "✓";
+            background: rgba(15, 81, 50, 0.14);
+        }
+        @keyframes messagePop {
+            from { opacity: 0; transform: translateX(-50%) translateY(-16px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        .ai-assist-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ai-hint-popout {
+            position: absolute;
+            left: 0;
+            top: calc(100% + 8px);
+            min-width: 240px;
+            max-width: 300px;
+            background: #102747;
+            color: #ffffff;
+            border-radius: 10px;
+            padding: 8px 10px;
+            font-size: 0.84rem;
+            line-height: 1.3;
+            box-shadow: 0 10px 20px rgba(16, 39, 71, 0.35);
+            display: none;
+            z-index: 20;
+        }
+        .ai-hint-popout.show {
+            display: block;
+        }
+        .ai-hint-popout::before {
+            content: "";
+            position: absolute;
+            left: 14px;
+            top: -6px;
+            border-width: 0 6px 6px 6px;
+            border-style: solid;
+            border-color: transparent transparent #102747 transparent;
+        }
+        @media (max-width: 991px) {
+            .memorial-shell {
+                max-width: 100%;
+            }
+        }
+        @media (max-width: 767px) {
+            .navbar-brand img {
+                height: 40px !important;
+            }
+            .memorial-card {
+                border-radius: 16px;
+            }
+            .card-body {
+                padding: 1rem !important;
+            }
+            .ai-modal-overlay {
+                padding: 8px;
+            }
+            .ai-modal-card {
+                max-height: 92vh;
+                border-radius: 14px;
+            }
+            .ai-modal-section {
+                padding: 10px 10px 2px;
+                margin-bottom: 10px;
+            }
+            .message-box {
+                top: 72px;
+                width: calc(100% - 14px);
+                padding: 12px 13px;
+            }
+            .section-chip {
+                font-size: 0.74rem;
+                padding: 5px 10px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="logged-in.html"><img src="Images/logo.png" alt="LifeQR Logo" style="height:50px;"></a>
+            <div class="navbar-collapse d-flex justify-content-end">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="logged-in.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link active fw-bold" href="create-memorial.html">Create Memorial</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right me-1"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="py-5 d-flex align-items-center" style="min-height: calc(100vh - 86px);">
+        <div class="container memorial-shell">
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <div class="card memorial-card">
+                        <div class="card-body p-4 p-md-5">
+                            <div class="d-flex flex-column align-items-center text-center gap-3 mb-4">
+                                <div>
+                                    <span class="section-chip"><i class="bi bi-flower1"></i> Tribute Builder</span>
+                                    <h1 class="headline mt-3 mb-2">Create a Memorial Page</h1>
+                                    <p class="text-muted mb-0">Craft a dignified page that honors your loved one.</p>
+                                </div>
+                                <img src="Images/example2.jpg" alt="Memorial" class="rounded-4 shadow-sm" style="width: 180px; height: 120px; object-fit: cover;">
+                            </div>
+
+                            <form id="memorialForm">
+                                <div class="mb-3">
+                                    <label for="deceasedName" class="form-label">Loved One's Full Name</label>
+                                    <input type="text" class="form-control" id="deceasedName" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="birthDate" class="form-label">Date of Birth</label>
+                                        <input type="date" class="form-control" id="birthDate" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="passingDate" class="form-label">Date of Passing</label>
+                                        <input type="date" class="form-control" id="passingDate" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="memorialTitle" class="form-label">Memorial Title</label>
+                                    <input type="text" class="form-control" id="memorialTitle" placeholder="Forever in our hearts" required>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="d-flex align-items-center justify-content-center mb-1">
+                                        <div class="ai-assist-wrap">
+                                            <label for="biography" class="form-label mb-0">Biography / Story</label>
+                                            <button type="button" class="btn btn-sm btn-outline-primary btn-ai px-3 py-1" id="aiBioAssistBtn" title="Generate with AI">
+                                                <i class="bi bi-stars me-1"></i>AI Assist
+                                            </button>
+                                            <div class="ai-hint-popout" id="aiHintPopout">AI Assist can help create the Biography / Story by asking a few quick questions.</div>
+                                        </div>
+                                    </div>
+                                    <textarea class="form-control ai-output-textarea" id="biography" rows="5" required></textarea>
+                                    <div id="aiAssistStatus" class="form-text text-muted mt-1"></div>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="specialMessage" class="form-label">Special Message From Family</label>
+                                    <textarea class="form-control" id="specialMessage" rows="4"></textarea>
+                                </div>
+                                <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                    <button type="submit" class="btn btn-create px-4 py-2">Save Memorial</button>
+                                    <a href="logged-in.html" class="btn btn-outline-secondary px-4">Back to Dashboard</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="message-box message-info" id="styledMessageBox"></div>
+
+    <div class="ai-modal-overlay" id="aiAssistModal">
+        <div class="ai-modal-card p-4 p-md-5">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h2 class="h4 mb-1 ai-modal-headline">AI Biography Assistant</h2>
+                    <p class="mb-0 ai-modal-subtitle">Answer these quick questions and I will draft a polished memorial story.</p>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close" id="closeAiModalBtn"></button>
+            </div>
+            <form id="aiAssistForm">
+                <div class="ai-step show" id="aiStep1">
+                    <div class="ai-modal-section">
+                        <label class="form-label ai-modal-label mb-2">Step 1 of 4: Choose a tone</label>
+                        <div class="d-grid gap-2">
+                            <label class="tone-choice tone-warm">
+                                <input type="radio" name="aiToneChoice" value="warm and gentle" checked>
+                                <span>Warm and gentle</span>
+                            </label>
+                            <label class="tone-choice tone-formal">
+                                <input type="radio" name="aiToneChoice" value="formal and respectful">
+                                <span>Formal and respectful</span>
+                            </label>
+                            <label class="tone-choice tone-celebratory">
+                                <input type="radio" name="aiToneChoice" value="celebratory and uplifting">
+                                <span>Celebratory and uplifting</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 justify-content-end">
+                        <button type="button" class="btn btn-outline-secondary" id="cancelAiModalBtn">Cancel</button>
+                        <button type="button" class="btn btn-ai-generate px-4 py-2" id="aiNextStepBtn">Next</button>
+                    </div>
+                </div>
+                <div class="ai-step" id="aiStep2">
+                    <div class="ai-modal-section">
+                        <label for="aiOpenEnded" class="form-label ai-modal-label">Step 2 of 4: Share anything you want remembered</label>
+                        <textarea class="form-control ai-modal-input" id="aiOpenEnded" rows="4" placeholder="Open-ended notes, memories, or details you want included."></textarea>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 justify-content-end">
+                        <button type="button" class="btn btn-outline-secondary" id="aiBackToToneBtn">Back</button>
+                        <button type="button" class="btn btn-ai-generate px-4 py-2" id="aiNextToFixedBtn">Next</button>
+                    </div>
+                </div>
+                <div class="ai-step" id="aiStep3">
+                    <div class="ai-modal-section">
+                        <label for="aiRelationship" class="form-label ai-modal-label">Step 3 of 4: What was your relationship to this person?</label>
+                        <input type="text" class="form-control ai-modal-input" id="aiRelationship" placeholder="Example: father, mother, spouse, friend">
+                    </div>
+                    <div class="ai-modal-section">
+                        <label for="aiQualities" class="form-label ai-modal-label">What qualities best describe them?</label>
+                        <input type="text" class="form-control ai-modal-input" id="aiQualities" placeholder="Example: kind, strong, generous">
+                    </div>
+                    <div class="ai-modal-section">
+                        <label for="aiMemories" class="form-label ai-modal-label">Share one or two favorite memories</label>
+                        <input type="text" class="form-control ai-modal-input" id="aiMemories">
+                    </div>
+                    <div class="ai-modal-section mb-4">
+                        <label for="aiAccomplishments" class="form-label ai-modal-label">Any accomplishments or life highlights?</label>
+                        <input type="text" class="form-control ai-modal-input" id="aiAccomplishments">
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 justify-content-end">
+                        <button type="button" class="btn btn-outline-secondary" id="aiBackFromFixedBtn">Back</button>
+                        <button type="button" class="btn btn-outline-primary" id="aiMoreQuestionsBtn">Add more questions</button>
+                        <button type="submit" class="btn btn-ai-generate px-4 py-2" id="generateAiBioBtn"><i class="bi bi-stars me-1"></i>Generate Biography</button>
+                    </div>
+                </div>
+                <div class="ai-step" id="aiStep4">
+                    <div class="ai-modal-section">
+                        <label class="form-label ai-modal-label mb-2">Step 4 of 5: Add more details</label>
+                        <p class="mb-0 text-muted">These extra questions help create a richer, more specific biography.</p>
+                    </div>
+                    <div class="ai-modal-section">
+                        <label for="aiEarlyLife" class="form-label ai-modal-label">Early life / hometown details</label>
+                        <input type="text" class="form-control ai-modal-input" id="aiEarlyLife" placeholder="Example: grew up in..., attended...">
+                    </div>
+                    <div class="ai-modal-section">
+                        <label for="aiFamily" class="form-label ai-modal-label">Family and loved ones to mention</label>
+                        <input type="text" class="form-control ai-modal-input" id="aiFamily" placeholder="Example: spouse, children, siblings">
+                    </div>
+                    <div class="ai-modal-section">
+                        <label for="aiPassions" class="form-label ai-modal-label">Passions, hobbies, or causes</label>
+                        <input type="text" class="form-control ai-modal-input" id="aiPassions" placeholder="Example: gardening, volunteering, music">
+                    </div>
+                    <div class="ai-modal-section mb-4">
+                        <label for="aiSignature" class="form-label ai-modal-label">Signature memories or sayings</label>
+                        <input type="text" class="form-control ai-modal-input" id="aiSignature" placeholder="Example: favorite phrase or tradition">
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 justify-content-end mb-3">
+                        <button type="button" class="btn btn-outline-primary" id="aiMoreQuestionsStep5Btn">Add even more questions</button>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 justify-content-end">
+                        <button type="button" class="btn btn-outline-secondary" id="aiBackFromExtraBtn">Back</button>
+                        <button type="submit" class="btn btn-ai-generate px-4 py-2"><i class="bi bi-stars me-1"></i>Generate Biography</button>
+                    </div>
+                </div>
+                <div class="ai-step" id="aiStep5">
+                    <div class="ai-modal-section">
+                        <label class="form-label ai-modal-label mb-2">Step 5 of 5: Optional extra details</label>
+                        <p class="mb-0 text-muted">Only fill what you want to include.</p>
+                    </div>
+                    <div class="ai-modal-section">
+                        <label for="aiLifeLessons" class="form-label ai-modal-label">Life lessons or values they taught</label>
+                        <input type="text" class="form-control ai-modal-input" id="aiLifeLessons" placeholder="Example: kindness, resilience, faith">
+                    </div>
+                    <div class="ai-modal-section">
+                        <label for="aiCommunity" class="form-label ai-modal-label">Community, work, or service involvement</label>
+                        <input type="text" class="form-control ai-modal-input" id="aiCommunity" placeholder="Example: church, volunteer work, clubs">
+                    </div>
+                    <div class="ai-modal-section">
+                        <label for="aiProudMoments" class="form-label ai-modal-label">Proudest moments or milestones</label>
+                        <input type="text" class="form-control ai-modal-input" id="aiProudMoments" placeholder="Example: graduation, career highlights">
+                    </div>
+                    <div class="ai-modal-section mb-4">
+                        <label for="aiComfort" class="form-label ai-modal-label">What brought them peace or comfort</label>
+                        <input type="text" class="form-control ai-modal-input" id="aiComfort" placeholder="Example: family dinners, nature walks">
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 justify-content-end">
+                        <button type="button" class="btn btn-outline-secondary" id="aiBackFromStep5Btn">Back</button>
+                        <button type="submit" class="btn btn-ai-generate px-4 py-2"><i class="bi bi-stars me-1"></i>Generate Biography</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        let hasShownAiMessage = false;
+        let messageTimer = null;
+        let lastScrollY = 0;
+        let aiHintCooldown = false;
+        if (!loggedInUser) {
+            window.location.href = 'login.html';
+        }
+
+        function showStyledMessage(text, type = 'info') {
+            const box = document.getElementById('styledMessageBox');
+            box.textContent = text;
+            box.classList.remove('message-success', 'message-error', 'message-info');
+            if (type === 'success') {
+                box.classList.add('message-success');
+            } else if (type === 'error') {
+                box.classList.add('message-error');
+            } else {
+                box.classList.add('message-info');
+            }
+            box.classList.add('show');
+            if (messageTimer) clearTimeout(messageTimer);
+            messageTimer = setTimeout(() => box.classList.remove('show'), 5000);
+        }
+
+        function autoResizeTextarea(el) {
+            if (!el) return;
+            el.style.height = 'auto';
+            el.style.height = `${el.scrollHeight}px`;
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', function(event) {
+            event.preventDefault();
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'login.html';
+        });
+
+        function openAiModal() {
+            document.getElementById('aiAssistModal').classList.add('show');
+            document.getElementById('aiStep1').classList.add('show');
+            document.getElementById('aiStep2').classList.remove('show');
+            document.getElementById('aiStep3').classList.remove('show');
+            document.getElementById('aiStep4').classList.remove('show');
+            document.getElementById('aiStep5').classList.remove('show');
+        }
+
+        function closeAiModal() {
+            document.getElementById('aiAssistModal').classList.remove('show');
+        }
+
+        function hasAnyMemorialInput() {
+            const fields = [
+                document.getElementById('deceasedName').value.trim(),
+                document.getElementById('birthDate').value.trim(),
+                document.getElementById('passingDate').value.trim(),
+                document.getElementById('memorialTitle').value.trim(),
+                document.getElementById('biography').value.trim(),
+                document.getElementById('specialMessage').value.trim()
+            ];
+            return fields.some(value => value !== '');
+        }
+
+        function showAiHintPopout() {
+            const hint = document.getElementById('aiHintPopout');
+            if (!hint) return;
+            hint.classList.add('show');
+            setTimeout(() => hint.classList.remove('show'), 4200);
+        }
+
+        window.addEventListener('load', function() {
+            showAiHintPopout();
+            hasShownAiMessage = true;
+            autoResizeTextarea(document.getElementById('biography'));
+        });
+
+        window.addEventListener('scroll', function() {
+            const currentY = window.scrollY || window.pageYOffset || 0;
+            if (currentY > lastScrollY + 8 && !aiHintCooldown) {
+                showAiHintPopout();
+                aiHintCooldown = true;
+                setTimeout(() => { aiHintCooldown = false; }, 1200);
+            }
+            lastScrollY = currentY;
+        }, { passive: true });
+
+        document.getElementById('aiBioAssistBtn').addEventListener('click', function() {
+            if (!hasAnyMemorialInput()) {
+                showStyledMessage('Please enter some memorial information first, then use AI Assist to refine the biography.', 'info');
+                return;
+            }
+            if (!hasShownAiMessage) {
+                showAiHintPopout();
+                hasShownAiMessage = true;
+                return;
+            }
+            openAiModal();
+        });
+
+        document.getElementById('closeAiModalBtn').addEventListener('click', closeAiModal);
+        document.getElementById('cancelAiModalBtn').addEventListener('click', closeAiModal);
+        document.getElementById('aiNextStepBtn').addEventListener('click', function() {
+            document.getElementById('aiStep1').classList.remove('show');
+            document.getElementById('aiStep2').classList.add('show');
+        });
+        document.getElementById('aiBackToToneBtn').addEventListener('click', function() {
+            document.getElementById('aiStep2').classList.remove('show');
+            document.getElementById('aiStep1').classList.add('show');
+        });
+        document.getElementById('aiNextToFixedBtn').addEventListener('click', function() {
+            document.getElementById('aiStep2').classList.remove('show');
+            document.getElementById('aiStep3').classList.add('show');
+        });
+        document.getElementById('aiBackFromFixedBtn').addEventListener('click', function() {
+            document.getElementById('aiStep3').classList.remove('show');
+            document.getElementById('aiStep2').classList.add('show');
+        });
+        document.getElementById('aiMoreQuestionsBtn').addEventListener('click', function() {
+            document.getElementById('aiStep3').classList.remove('show');
+            document.getElementById('aiStep4').classList.add('show');
+        });
+        document.getElementById('aiBackFromExtraBtn').addEventListener('click', function() {
+            document.getElementById('aiStep4').classList.remove('show');
+            document.getElementById('aiStep3').classList.add('show');
+        });
+        document.getElementById('aiMoreQuestionsStep5Btn').addEventListener('click', function() {
+            document.getElementById('aiStep4').classList.remove('show');
+            document.getElementById('aiStep5').classList.add('show');
+        });
+        document.getElementById('aiBackFromStep5Btn').addEventListener('click', function() {
+            document.getElementById('aiStep5').classList.remove('show');
+            document.getElementById('aiStep4').classList.add('show');
+        });
+        document.getElementById('aiAssistModal').addEventListener('click', function(event) {
+            if (event.target.id === 'aiAssistModal') {
+                closeAiModal();
+            }
+        });
+
+        document.getElementById('aiAssistForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const existingBiography = document.getElementById('biography').value.trim();
+            const statusEl = document.getElementById('aiAssistStatus');
+            const aiBtn = document.getElementById('aiBioAssistBtn');
+            const generateBtn = document.getElementById('generateAiBioBtn');
+
+            const relationship = document.getElementById('aiRelationship').value.trim();
+            const qualities = document.getElementById('aiQualities').value.trim();
+            const memories = document.getElementById('aiMemories').value.trim();
+            const accomplishments = document.getElementById('aiAccomplishments').value.trim();
+            const extraQuestionsEnabled = document.getElementById('aiStep4').classList.contains('show') || document.getElementById('aiStep5').classList.contains('show');
+            const step5Enabled = document.getElementById('aiStep5').classList.contains('show');
+            const earlyLife = document.getElementById('aiEarlyLife').value.trim();
+            const family = document.getElementById('aiFamily').value.trim();
+            const passions = document.getElementById('aiPassions').value.trim();
+            const signature = document.getElementById('aiSignature').value.trim();
+            const lifeLessons = document.getElementById('aiLifeLessons').value.trim();
+            const community = document.getElementById('aiCommunity').value.trim();
+            const proudMoments = document.getElementById('aiProudMoments').value.trim();
+            const comfort = document.getElementById('aiComfort').value.trim();
+            const toneRadio = document.querySelector('input[name="aiToneChoice"]:checked');
+            const tone = toneRadio ? toneRadio.value : 'warm and gentle';
+            const openEnded = document.getElementById('aiOpenEnded').value.trim();
+
+            const promptPieces = [];
+            if (relationship) promptPieces.push(`Relationship: ${relationship}`);
+            if (qualities) promptPieces.push(`Qualities: ${qualities}`);
+            if (memories) promptPieces.push(`Favorite memories: ${memories}`);
+            if (accomplishments) promptPieces.push(`Accomplishments: ${accomplishments}`);
+            if (openEnded) promptPieces.push(`Additional notes: ${openEnded}`);
+            if (extraQuestionsEnabled) {
+                if (earlyLife) promptPieces.push(`Early life: ${earlyLife}`);
+                if (family) promptPieces.push(`Family: ${family}`);
+                if (passions) promptPieces.push(`Passions: ${passions}`);
+                if (signature) promptPieces.push(`Signature memories/sayings: ${signature}`);
+                if (step5Enabled) {
+                    if (lifeLessons) promptPieces.push(`Life lessons/values: ${lifeLessons}`);
+                    if (community) promptPieces.push(`Community/work/service: ${community}`);
+                    if (proudMoments) promptPieces.push(`Proudest moments: ${proudMoments}`);
+                    if (comfort) promptPieces.push(`Comfort/peace: ${comfort}`);
+                }
+            }
+            if (tone) promptPieces.push(`Preferred tone: ${tone}`);
+
+            if (promptPieces.length === 0 && !existingBiography) {
+                showStyledMessage('Please answer at least one question or add some existing biography text.', 'error');
+                return;
+            }
+
+            const biographySeed = `${existingBiography}\n\n${promptPieces.join('\n')}`.trim();
+
+            statusEl.textContent = 'Generating biography draft...';
+            aiBtn.disabled = true;
+            generateBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/ai/biography-assist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ biographyText: biographySeed })
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    statusEl.textContent = '';
+                    showStyledMessage(data.message || 'AI assist failed.', 'error');
+                    return;
+                }
+
+                const biographyField = document.getElementById('biography');
+                biographyField.value = data.draftText || biographyField.value;
+                autoResizeTextarea(biographyField);
+                statusEl.textContent = 'Draft generated. Review and edit as needed.';
+                showStyledMessage('Biography draft generated. Review and edit as needed.', 'success');
+                closeAiModal();
+            } catch (err) {
+                statusEl.textContent = '';
+                showStyledMessage('Unable to reach AI assist service.', 'error');
+            } finally {
+                aiBtn.disabled = false;
+                generateBtn.disabled = false;
+            }
+        });
+
+
+        document.getElementById('biography').addEventListener('input', function(e) {
+            autoResizeTextarea(e.target);
+        });
+
+        document.getElementById('memorialForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const memorial = {
+                createdBy: loggedInUser,
+                deceasedName: document.getElementById('deceasedName').value.trim(),
+                birthDate: document.getElementById('birthDate').value,
+                passingDate: document.getElementById('passingDate').value,
+                memorialTitle: document.getElementById('memorialTitle').value.trim(),
+                biography: document.getElementById('biography').value.trim(),
+                specialMessage: document.getElementById('specialMessage').value.trim(),
+                createdAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('latestMemorialDraft', JSON.stringify(memorial));
+            showStyledMessage('Memorial saved. Redirecting to dashboard...', 'success');
+            setTimeout(() => {
+                window.location.href = 'logged-in.html';
+            }, 900);
+        });
+    </script>
+</body>
+</html>
