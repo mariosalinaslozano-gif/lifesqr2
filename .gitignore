@@ -1,0 +1,15 @@
+# Environment variables - never commit these
+.env
+*.env
+.env.*
+
+# Render / deployment notes with secrets
+render-env.md
+
+# Build output
+bin/
+obj/
+
+# OS
+.DS_Store
+Thumbs.db
