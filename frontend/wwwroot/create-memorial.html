@@ -100,14 +100,78 @@
         }
         .ai-modal-card {
             width: 100%;
-            max-width: 700px;
-            max-height: min(90vh, 820px);
-            overflow-y: auto;
+            max-width: 680px;
+            height: auto;
+            max-height: min(92vh, 780px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
             background: linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
             border-radius: 18px;
             border: 1px solid rgba(16, 39, 71, 0.12);
             box-shadow: 0 24px 40px rgba(12, 27, 52, 0.4);
             animation: modalIn 0.22s ease-out;
+        }
+        .ai-modal-card--tall {
+            height: min(92vh, 780px);
+        }
+        .ai-modal-body {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 0 1.5rem 1.5rem;
+        }
+        .ai-step {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+        .ai-step.show {
+            display: flex;
+        }
+        .ai-questions-grid {
+            flex: 1;
+            display: grid;
+            grid-template-rows: repeat(5, 1fr);
+            gap: 6px;
+            overflow: hidden;
+        }
+        .ai-q-item {
+            border: 1px solid #a7bfdc;
+            border-radius: 10px;
+            background: #f4f8fd;
+            padding: 6px 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .ai-q-item label {
+            font-weight: 700;
+            color: #19345d;
+            font-size: 0.78rem;
+            margin-bottom: 3px;
+            line-height: 1.2;
+        }
+        .ai-q-item input {
+            border-radius: 7px;
+            border: 1px solid #90adcf;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.82rem;
+            background: #fff;
+            width: 100%;
+        }
+        .ai-q-item input:focus {
+            border-color: #2f5f9d;
+            outline: none;
+            box-shadow: 0 0 0 0.15rem rgba(47,95,157,0.15);
+        }
+        .ai-step-footer {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            padding-top: 10px;
+            flex-shrink: 0;
         }
         @keyframes modalIn {
             from { opacity: 0; transform: translateY(8px) scale(0.98); }
@@ -131,7 +195,13 @@
             display: none;
         }
         .ai-step.show {
-            display: block;
+            display: flex;
+            flex-direction: column;
+        }
+        .ai-step--fill.show {
+            flex: 1;
+            overflow: hidden;
+            min-height: 0;
         }
         .tone-choice {
             border: 1px solid #cfdced;
@@ -292,6 +362,86 @@
             border-style: solid;
             border-color: transparent transparent #102747 transparent;
         }
+        .q-section-wrap { position: relative; }
+        .btn-remove-q {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #dc3545;
+            border: none;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 900;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            transition: background 0.15s;
+        }
+        .btn-remove-q:hover { background: #a71d2a; }
+        .btn-restore-q {
+            border: 1px dashed #dc3545;
+            border-radius: 10px;
+            background: #fff5f5;
+            color: #dc3545;
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 6px 12px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.15s;
+            width: 100%;
+        }
+        .btn-restore-q:hover { background: #ffe0e0; }
+        .ai-q-grid {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-height: 0;
+        }
+        .ai-q-grid .q-section-wrap {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .ai-q-grid .ai-modal-section {
+            flex: 1;
+            padding: 5px 2.6rem 5px 10px;
+            margin-bottom: 0;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 0;
+        }
+        .ai-q-grid .form-label.ai-modal-label {
+            font-size: 0.76rem;
+            margin-bottom: 3px;
+            line-height: 1.25;
+        }
+        .ai-q-grid .ai-modal-input {
+            padding: 0.24rem 0.5rem;
+            font-size: 0.82rem;
+            border-radius: 8px;
+        }
+        .ai-q-grid .btn-remove-q {
+            top: 5px;
+            right: 5px;
+            width: 24px;
+            height: 24px;
+            font-size: 0.85rem;
+        }
+        [id$="-restore-area"] { flex-shrink: 0; }
         @media (max-width: 991px) {
             .memorial-shell {
                 max-width: 100%;
@@ -418,7 +568,7 @@
                 </div>
                 <button type="button" class="btn-close" aria-label="Close" id="closeAiModalBtn"></button>
             </div>
-            <form id="aiAssistForm">
+            <form id="aiAssistForm" style="display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;">
                 <div class="ai-step show" id="aiStep1">
                     <div class="ai-modal-section">
                         <label class="form-label ai-modal-label mb-2">Step 1 of 4: Choose a tone</label>
@@ -452,82 +602,194 @@
                         <button type="button" class="btn btn-ai-generate px-4 py-2" id="aiNextToFixedBtn">Next</button>
                     </div>
                 </div>
-                <div class="ai-step" id="aiStep3">
-                    <div class="ai-modal-section">
-                        <label for="aiRelationship" class="form-label ai-modal-label">Step 3 of 4: What was your relationship to this person?</label>
-                        <input type="text" class="form-control ai-modal-input" id="aiRelationship" placeholder="Example: father, mother, spouse, friend">
+                <!-- Question Set 1 of 4: Identity & Life Foundation -->
+                <div class="ai-step ai-step--fill" id="aiStep3">
+                    <p class="ai-modal-label mb-1 flex-shrink-0">Question Set 1 of 4 &mdash; Identity &amp; Life Foundation</p>
+                    <div class="ai-q-grid">
+                        <div class="q-section-wrap position-relative" id="q3_1-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q3_1','step3','Full name and nickname')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">What was your loved one's full name, and what did people usually call them?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q3_1" placeholder="e.g. Robert James Miller, known as Bobby">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q3_2-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q3_2','step3','Birth')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">When and where were they born?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q3_2" placeholder="e.g. March 5, 1942 in San Antonio, TX">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q3_3-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q3_3','step3','Passing')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">When did they pass, and where?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q3_3" placeholder="e.g. January 12, 2024 at home surrounded by family">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q3_4-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q3_4','step3','Life roles')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">What were the most important roles they held in life?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q3_4" placeholder="e.g. mother, mentor, veteran, community leader">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q3_5-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q3_5','step3','Life journey')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">Can you briefly describe their life journey?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q3_5" placeholder="e.g. grew up in Texas, moved to California, raised 3 kids">
+                            </div>
+                        </div>
+                        <div id="step3-restore-area" class="mt-1"></div>
                     </div>
-                    <div class="ai-modal-section">
-                        <label for="aiQualities" class="form-label ai-modal-label">What qualities best describe them?</label>
-                        <input type="text" class="form-control ai-modal-input" id="aiQualities" placeholder="Example: kind, strong, generous">
-                    </div>
-                    <div class="ai-modal-section">
-                        <label for="aiMemories" class="form-label ai-modal-label">Share one or two favorite memories</label>
-                        <input type="text" class="form-control ai-modal-input" id="aiMemories">
-                    </div>
-                    <div class="ai-modal-section mb-4">
-                        <label for="aiAccomplishments" class="form-label ai-modal-label">Any accomplishments or life highlights?</label>
-                        <input type="text" class="form-control ai-modal-input" id="aiAccomplishments">
-                    </div>
-                    <div class="d-flex flex-wrap gap-2 justify-content-end">
-                        <button type="button" class="btn btn-outline-secondary" id="aiBackFromFixedBtn">Back</button>
-                        <button type="button" class="btn btn-outline-primary" id="aiMoreQuestionsBtn">Add more questions</button>
-                        <button type="submit" class="btn btn-ai-generate px-4 py-2" id="generateAiBioBtn"><i class="bi bi-stars me-1"></i>Generate Biography</button>
-                    </div>
-                </div>
-                <div class="ai-step" id="aiStep4">
-                    <div class="ai-modal-section">
-                        <label class="form-label ai-modal-label mb-2">Step 4 of 5: Add more details</label>
-                        <p class="mb-0 text-muted">These extra questions help create a richer, more specific biography.</p>
-                    </div>
-                    <div class="ai-modal-section">
-                        <label for="aiEarlyLife" class="form-label ai-modal-label">Early life / hometown details</label>
-                        <input type="text" class="form-control ai-modal-input" id="aiEarlyLife" placeholder="Example: grew up in..., attended...">
-                    </div>
-                    <div class="ai-modal-section">
-                        <label for="aiFamily" class="form-label ai-modal-label">Family and loved ones to mention</label>
-                        <input type="text" class="form-control ai-modal-input" id="aiFamily" placeholder="Example: spouse, children, siblings">
-                    </div>
-                    <div class="ai-modal-section">
-                        <label for="aiPassions" class="form-label ai-modal-label">Passions, hobbies, or causes</label>
-                        <input type="text" class="form-control ai-modal-input" id="aiPassions" placeholder="Example: gardening, volunteering, music">
-                    </div>
-                    <div class="ai-modal-section mb-4">
-                        <label for="aiSignature" class="form-label ai-modal-label">Signature memories or sayings</label>
-                        <input type="text" class="form-control ai-modal-input" id="aiSignature" placeholder="Example: favorite phrase or tradition">
-                    </div>
-                    <div class="d-flex flex-wrap gap-2 justify-content-end mb-3">
-                        <button type="button" class="btn btn-outline-primary" id="aiMoreQuestionsStep5Btn">Add even more questions</button>
-                    </div>
-                    <div class="d-flex flex-wrap gap-2 justify-content-end">
-                        <button type="button" class="btn btn-outline-secondary" id="aiBackFromExtraBtn">Back</button>
-                        <button type="submit" class="btn btn-ai-generate px-4 py-2"><i class="bi bi-stars me-1"></i>Generate Biography</button>
+                    <div class="ai-step-footer flex-shrink-0">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="aiBackFromStep3Btn">Back</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm px-3" id="aiStep3MoreBtn"><i class="bi bi-plus me-1"></i>5 More Questions</button>
+                        <button type="button" class="btn btn-ai-generate btn-sm px-3" onclick="generateBiography()"><i class="bi bi-stars me-1"></i>Generate Biography</button>
                     </div>
                 </div>
-                <div class="ai-step" id="aiStep5">
-                    <div class="ai-modal-section">
-                        <label class="form-label ai-modal-label mb-2">Step 5 of 5: Optional extra details</label>
-                        <p class="mb-0 text-muted">Only fill what you want to include.</p>
+
+                <!-- Question Set 2 of 4: Character & Relationships -->
+                <div class="ai-step ai-step--fill" id="aiStep4">
+                    <p class="ai-modal-label mb-1 flex-shrink-0">Question Set 2 of 4 &mdash; Character &amp; Relationships</p>
+                    <div class="ai-q-grid">
+                        <div class="q-section-wrap position-relative" id="q4_1-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q4_1','step4','Personality')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">How would you describe their personality in a few words?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q4_1" placeholder="e.g. warm, stubborn in the best way, always laughing">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q4_2-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q4_2','step4','Values')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">What values or beliefs guided how they lived?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q4_2" placeholder="e.g. faith, hard work, putting family first">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q4_3-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q4_3','step4','Important people')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">Who were the most important people in their life?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q4_3" placeholder="e.g. their spouse, children, best friend since childhood">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q4_4-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q4_4','step4','Showing love')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">How did they show love and care for the people around them?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q4_4" placeholder="e.g. always cooking for others, never missed a birthday">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q4_5-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q4_5','step4','Career')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">What did they do for work, or what was their greatest professional achievement?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q4_5" placeholder="e.g. nurse for 30 years, started a small business">
+                            </div>
+                        </div>
+                        <div id="step4-restore-area" class="mt-1"></div>
                     </div>
-                    <div class="ai-modal-section">
-                        <label for="aiLifeLessons" class="form-label ai-modal-label">Life lessons or values they taught</label>
-                        <input type="text" class="form-control ai-modal-input" id="aiLifeLessons" placeholder="Example: kindness, resilience, faith">
+                    <div class="ai-step-footer flex-shrink-0">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="aiBackFromStep4Btn">Back</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm px-3" id="aiStep4MoreBtn"><i class="bi bi-plus me-1"></i>5 More Questions</button>
+                        <button type="button" class="btn btn-ai-generate btn-sm px-3" onclick="generateBiography()"><i class="bi bi-stars me-1"></i>Generate Biography</button>
                     </div>
-                    <div class="ai-modal-section">
-                        <label for="aiCommunity" class="form-label ai-modal-label">Community, work, or service involvement</label>
-                        <input type="text" class="form-control ai-modal-input" id="aiCommunity" placeholder="Example: church, volunteer work, clubs">
+                </div>
+
+                <!-- Question Set 3 of 4: Passions & Memories -->
+                <div class="ai-step ai-step--fill" id="aiStep5">
+                    <p class="ai-modal-label mb-1 flex-shrink-0">Question Set 3 of 4 &mdash; Passions &amp; Memories</p>
+                    <div class="ai-q-grid">
+                        <div class="q-section-wrap position-relative" id="q5_1-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q5_1','step5','Hobbies and passions')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">What hobbies, passions, or activities brought them the most joy?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q5_1" placeholder="e.g. gardening, woodworking, playing guitar">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q5_2-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q5_2','step5','Favorite memories')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">What are some of your favorite memories with them?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q5_2" placeholder="e.g. Sunday dinners, fishing trips, bedtime stories">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q5_3-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q5_3','step5','Community impact')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">What impact did they have on family, friends, or their community?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q5_3" placeholder="e.g. coached little league for 20 years, always the first to help">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q5_4-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q5_4','step5','Pride and achievement')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">What accomplishment were they most proud of?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q5_4" placeholder="e.g. raising their children, completing college later in life">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q5_5-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q5_5','step5','Your unique bond')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">What made your relationship with them truly unique or special?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q5_5" placeholder="e.g. our early morning calls, inside jokes only we shared">
+                            </div>
+                        </div>
+                        <div id="step5-restore-area" class="mt-1"></div>
                     </div>
-                    <div class="ai-modal-section">
-                        <label for="aiProudMoments" class="form-label ai-modal-label">Proudest moments or milestones</label>
-                        <input type="text" class="form-control ai-modal-input" id="aiProudMoments" placeholder="Example: graduation, career highlights">
+                    <div class="ai-step-footer flex-shrink-0">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="aiBackFromStep5Btn">Back</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm px-3" id="aiStep5MoreBtn"><i class="bi bi-plus me-1"></i>5 More Questions</button>
+                        <button type="button" class="btn btn-ai-generate btn-sm px-3" onclick="generateBiography()"><i class="bi bi-stars me-1"></i>Generate Biography</button>
                     </div>
-                    <div class="ai-modal-section mb-4">
-                        <label for="aiComfort" class="form-label ai-modal-label">What brought them peace or comfort</label>
-                        <input type="text" class="form-control ai-modal-input" id="aiComfort" placeholder="Example: family dinners, nature walks">
+                </div>
+
+                <!-- Question Set 4 of 4: Legacy & Final Thoughts -->
+                <div class="ai-step ai-step--fill" id="aiStep6">
+                    <p class="ai-modal-label mb-1 flex-shrink-0">Question Set 4 of 4 &mdash; Legacy &amp; Final Thoughts</p>
+                    <div class="ai-q-grid">
+                        <div class="q-section-wrap position-relative" id="q6_1-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q6_1','step6','For future generations')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">What do you want future generations to know about them?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q6_1" placeholder="e.g. they never gave up, they loved unconditionally">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q6_2-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q6_2','step6','Wisdom and lessons')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">What lessons or wisdom did they leave behind?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q6_2" placeholder="e.g. never go to bed angry, always keep learning">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q6_3-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q6_3','step6','What made them smile')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">What was something that always made them laugh or smile?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q6_3" placeholder="e.g. bad puns, old westerns, watching their grandkids">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q6_4-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q6_4','step6','Defining place or tradition')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">Was there a place, song, book, or tradition that defined who they were?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q6_4" placeholder="e.g. their front porch, Amazing Grace, Sunday roast">
+                            </div>
+                        </div>
+                        <div class="q-section-wrap position-relative" id="q6_5-wrap">
+                            <button type="button" class="btn-remove-q" onclick="removeQuestion('q6_5','step6','Their final message')">&#x2715;</button>
+                            <div class="ai-modal-section">
+                                <label class="form-label ai-modal-label">If they could leave a final message, what do you think it would be?</label>
+                                <input type="text" class="form-control ai-modal-input" id="aiQ_q6_5" placeholder="e.g. be kind, live fully, remember I love you">
+                            </div>
+                        </div>
+                        <div id="step6-restore-area" class="mt-1"></div>
                     </div>
-                    <div class="d-flex flex-wrap gap-2 justify-content-end">
-                        <button type="button" class="btn btn-outline-secondary" id="aiBackFromStep5Btn">Back</button>
-                        <button type="submit" class="btn btn-ai-generate px-4 py-2"><i class="bi bi-stars me-1"></i>Generate Biography</button>
+                    <div class="ai-step-footer flex-shrink-0">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="aiBackFromStep6Btn">Back</button>
+                        <button type="submit" class="btn btn-ai-generate btn-sm px-3" id="generateAiBioBtn"><i class="bi bi-stars me-1"></i>Generate Biography</button>
                     </div>
                 </div>
             </form>
@@ -572,13 +834,34 @@
             window.location.href = 'login.html';
         });
 
+        function removeQuestion(qId, stepId, label) {
+            document.getElementById(qId + '-wrap').style.display = 'none';
+            const area = document.getElementById(stepId + '-restore-area');
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn-restore-q';
+            btn.id = qId + '-restore-btn';
+            btn.innerHTML = '<i class="bi bi-plus-circle"></i> Restore: ' + label;
+            btn.onclick = function() {
+                document.getElementById(qId + '-wrap').style.display = '';
+                btn.remove();
+            };
+            area.appendChild(btn);
+        }
+
+        const AI_STEPS = ['aiStep1','aiStep2','aiStep3','aiStep4','aiStep5','aiStep6'];
+
+        function showStep(id) {
+            AI_STEPS.forEach(s => document.getElementById(s).classList.remove('show'));
+            document.getElementById(id).classList.add('show');
+            const tall = ['aiStep3','aiStep4','aiStep5','aiStep6'].includes(id);
+            document.querySelector('.ai-modal-card').classList.toggle('ai-modal-card--tall', tall);
+        }
+
         function openAiModal() {
             document.getElementById('aiAssistModal').classList.add('show');
-            document.getElementById('aiStep1').classList.add('show');
-            document.getElementById('aiStep2').classList.remove('show');
-            document.getElementById('aiStep3').classList.remove('show');
-            document.getElementById('aiStep4').classList.remove('show');
-            document.getElementById('aiStep5').classList.remove('show');
+            document.querySelector('.ai-modal-card').classList.remove('ai-modal-card--tall');
+            showStep('aiStep1');
         }
 
         function closeAiModal() {
@@ -635,100 +918,63 @@
 
         document.getElementById('closeAiModalBtn').addEventListener('click', closeAiModal);
         document.getElementById('cancelAiModalBtn').addEventListener('click', closeAiModal);
-        document.getElementById('aiNextStepBtn').addEventListener('click', function() {
-            document.getElementById('aiStep1').classList.remove('show');
-            document.getElementById('aiStep2').classList.add('show');
-        });
-        document.getElementById('aiBackToToneBtn').addEventListener('click', function() {
-            document.getElementById('aiStep2').classList.remove('show');
-            document.getElementById('aiStep1').classList.add('show');
-        });
-        document.getElementById('aiNextToFixedBtn').addEventListener('click', function() {
-            document.getElementById('aiStep2').classList.remove('show');
-            document.getElementById('aiStep3').classList.add('show');
-        });
-        document.getElementById('aiBackFromFixedBtn').addEventListener('click', function() {
-            document.getElementById('aiStep3').classList.remove('show');
-            document.getElementById('aiStep2').classList.add('show');
-        });
-        document.getElementById('aiMoreQuestionsBtn').addEventListener('click', function() {
-            document.getElementById('aiStep3').classList.remove('show');
-            document.getElementById('aiStep4').classList.add('show');
-        });
-        document.getElementById('aiBackFromExtraBtn').addEventListener('click', function() {
-            document.getElementById('aiStep4').classList.remove('show');
-            document.getElementById('aiStep3').classList.add('show');
-        });
-        document.getElementById('aiMoreQuestionsStep5Btn').addEventListener('click', function() {
-            document.getElementById('aiStep4').classList.remove('show');
-            document.getElementById('aiStep5').classList.add('show');
-        });
-        document.getElementById('aiBackFromStep5Btn').addEventListener('click', function() {
-            document.getElementById('aiStep5').classList.remove('show');
-            document.getElementById('aiStep4').classList.add('show');
-        });
+        document.getElementById('aiNextStepBtn').addEventListener('click', () => showStep('aiStep2'));
+        document.getElementById('aiBackToToneBtn').addEventListener('click', () => showStep('aiStep1'));
+        document.getElementById('aiNextToFixedBtn').addEventListener('click', () => showStep('aiStep3'));
+        document.getElementById('aiBackFromStep3Btn').addEventListener('click', () => showStep('aiStep2'));
+        document.getElementById('aiStep3MoreBtn').addEventListener('click', () => showStep('aiStep4'));
+        document.getElementById('aiBackFromStep4Btn').addEventListener('click', () => showStep('aiStep3'));
+        document.getElementById('aiStep4MoreBtn').addEventListener('click', () => showStep('aiStep5'));
+        document.getElementById('aiBackFromStep5Btn').addEventListener('click', () => showStep('aiStep4'));
+        document.getElementById('aiStep5MoreBtn').addEventListener('click', () => showStep('aiStep6'));
+        document.getElementById('aiBackFromStep6Btn').addEventListener('click', () => showStep('aiStep5'));
         document.getElementById('aiAssistModal').addEventListener('click', function(event) {
-            if (event.target.id === 'aiAssistModal') {
-                closeAiModal();
-            }
+            if (event.target.id === 'aiAssistModal') closeAiModal();
         });
 
-        document.getElementById('aiAssistForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
+        const Q_LABELS = {
+            q3_1: 'Full name / known as', q3_2: 'Born',           q3_3: 'Passed',
+            q3_4: 'Life roles',           q3_5: 'Life journey',
+            q4_1: 'Personality',          q4_2: 'Values/beliefs', q4_3: 'Important people',
+            q4_4: 'Showing love',         q4_5: 'Career',
+            q5_1: 'Hobbies and passions', q5_2: 'Favorite memories', q5_3: 'Community impact',
+            q5_4: 'Greatest achievement', q5_5: 'Unique bond',
+            q6_1: 'For future generations', q6_2: 'Wisdom and lessons', q6_3: 'What made them smile',
+            q6_4: 'Defining place or tradition', q6_5: 'Final message'
+        };
 
+        async function generateBiography() {
             const existingBiography = document.getElementById('biography').value.trim();
             const statusEl = document.getElementById('aiAssistStatus');
             const aiBtn = document.getElementById('aiBioAssistBtn');
-            const generateBtn = document.getElementById('generateAiBioBtn');
+            const allGenerateBtns = document.querySelectorAll('#generateAiBioBtn, [onclick="generateBiography()"]');
 
-            const relationship = document.getElementById('aiRelationship').value.trim();
-            const qualities = document.getElementById('aiQualities').value.trim();
-            const memories = document.getElementById('aiMemories').value.trim();
-            const accomplishments = document.getElementById('aiAccomplishments').value.trim();
-            const extraQuestionsEnabled = document.getElementById('aiStep4').classList.contains('show') || document.getElementById('aiStep5').classList.contains('show');
-            const step5Enabled = document.getElementById('aiStep5').classList.contains('show');
-            const earlyLife = document.getElementById('aiEarlyLife').value.trim();
-            const family = document.getElementById('aiFamily').value.trim();
-            const passions = document.getElementById('aiPassions').value.trim();
-            const signature = document.getElementById('aiSignature').value.trim();
-            const lifeLessons = document.getElementById('aiLifeLessons').value.trim();
-            const community = document.getElementById('aiCommunity').value.trim();
-            const proudMoments = document.getElementById('aiProudMoments').value.trim();
-            const comfort = document.getElementById('aiComfort').value.trim();
             const toneRadio = document.querySelector('input[name="aiToneChoice"]:checked');
             const tone = toneRadio ? toneRadio.value : 'warm and gentle';
             const openEnded = document.getElementById('aiOpenEnded').value.trim();
 
             const promptPieces = [];
-            if (relationship) promptPieces.push(`Relationship: ${relationship}`);
-            if (qualities) promptPieces.push(`Qualities: ${qualities}`);
-            if (memories) promptPieces.push(`Favorite memories: ${memories}`);
-            if (accomplishments) promptPieces.push(`Accomplishments: ${accomplishments}`);
-            if (openEnded) promptPieces.push(`Additional notes: ${openEnded}`);
-            if (extraQuestionsEnabled) {
-                if (earlyLife) promptPieces.push(`Early life: ${earlyLife}`);
-                if (family) promptPieces.push(`Family: ${family}`);
-                if (passions) promptPieces.push(`Passions: ${passions}`);
-                if (signature) promptPieces.push(`Signature memories/sayings: ${signature}`);
-                if (step5Enabled) {
-                    if (lifeLessons) promptPieces.push(`Life lessons/values: ${lifeLessons}`);
-                    if (community) promptPieces.push(`Community/work/service: ${community}`);
-                    if (proudMoments) promptPieces.push(`Proudest moments: ${proudMoments}`);
-                    if (comfort) promptPieces.push(`Comfort/peace: ${comfort}`);
+            if (tone) promptPieces.push('Preferred tone: ' + tone);
+            if (openEnded) promptPieces.push('Additional notes: ' + openEnded);
+
+            Object.keys(Q_LABELS).forEach(qId => {
+                const wrap = document.getElementById(qId + '-wrap');
+                const input = document.getElementById('aiQ_' + qId);
+                if (wrap && input && wrap.style.display !== 'none' && input.value.trim()) {
+                    promptPieces.push(Q_LABELS[qId] + ': ' + input.value.trim());
                 }
-            }
-            if (tone) promptPieces.push(`Preferred tone: ${tone}`);
+            });
 
             if (promptPieces.length === 0 && !existingBiography) {
                 showStyledMessage('Please answer at least one question or add some existing biography text.', 'error');
                 return;
             }
 
-            const biographySeed = `${existingBiography}\n\n${promptPieces.join('\n')}`.trim();
+            const biographySeed = (existingBiography + '\n\n' + promptPieces.join('\n')).trim();
 
             statusEl.textContent = 'Generating biography draft...';
             aiBtn.disabled = true;
-            generateBtn.disabled = true;
+            allGenerateBtns.forEach(b => b.disabled = true);
 
             try {
                 const response = await fetch('/api/ai/biography-assist', {
@@ -755,8 +1001,13 @@
                 showStyledMessage('Unable to reach AI assist service.', 'error');
             } finally {
                 aiBtn.disabled = false;
-                generateBtn.disabled = false;
+                allGenerateBtns.forEach(b => b.disabled = false);
             }
+        }
+
+        document.getElementById('aiAssistForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            generateBiography();
         });
 
 
