@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Memorials - LifeQR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="css/site.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html"><img src="Images/logo.png" alt="LifeQR Logo" style="height:50px;"></a>
+            <div class="navbar-collapse d-flex justify-content-end" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="learn-more.html">Learn More</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="search.html">Search Memorials</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cart.html"><i class="bi bi-cart3 me-1"></i>Cart</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-primary text-white ms-2 px-3" href="login.html"><i class="bi bi-person me-1"></i>Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h1 class="page-title text-center mb-3">Search Memorials</h1>
+                <p class="page-subtitle text-center mb-4">Find and visit digital memorials of loved ones</p>
+                
+                <div class="text-center mb-5">
+                    <img src="Images/example4.jpg" alt="Memorial Search" class="img-fluid rounded shadow" style="max-height: 300px; object-fit: cover; width: 100%;">
+                </div>
+
+                <div class="card shadow-sm mb-5">
+                    <div class="card-body p-4">
+                        <form id="searchForm">
+                            <div class="mb-3">
+                                <label class="form-label">Search by Name</label>
+                                <input type="text" class="form-control form-control-lg" placeholder="Enter first or last name" id="searchName">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Birth Year (Optional)</label>
+                                    <input type="number" class="form-control" placeholder="YYYY" id="birthYear">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Location (Optional)</label>
+                                    <input type="text" class="form-control" placeholder="City, State" id="location">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg w-100">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="searchResults" style="display:none;">
+                    <h3 class="section-title mb-4">Search Results</h3>
+                    <div class="row g-3" id="resultsContainer">
+                    </div>
+                </div>
+
+                <div id="noResults" style="display:none;" class="text-center py-5">
+                    <p class="text-muted">No memorials found. Try adjusting your search criteria.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <footer class="site-footer text-white py-5">
+        <div class="container text-center">
+            <img src="Images/buttomLogo.png" alt="LifeQR" class="site-footer-logo mb-3">
+            <div class="site-footer-links d-flex flex-wrap justify-content-center align-items-center gap-3 mb-3">
+                <a href="#" class="text-white-50 text-decoration-none">Facebook</a>
+                <a href="#" class="text-white-50 text-decoration-none">Instagram</a>
+                <a href="learn-more.html" class="text-white-50 text-decoration-none">Learn More</a>
+                <a href="#" class="text-white-50 text-decoration-none">FAQ</a>
+                <a href="search.html" class="text-white-50 text-decoration-none">Find Memorial</a>
+            </div>
+            <p class="mb-0">&copy; 2024 Life's QR</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/site.js"></script>
+    <script>
+        const memorials = [
+            {
+                name: "Nelson Mandela",
+                years: "1918 - 2013",
+                birthYear: 1918,
+                location: "Mvezo, South Africa",
+                summary: "Anti-apartheid leader and former President of South Africa, remembered for reconciliation and justice."
+            },
+            {
+                name: "Princess Diana",
+                years: "1961 - 1997",
+                birthYear: 1961,
+                location: "Sandringham, England",
+                summary: "Known for humanitarian work and compassion, she left a lasting global legacy."
+            },
+            {
+                name: "Kobe Bryant",
+                years: "1978 - 2020",
+                birthYear: 1978,
+                location: "Philadelphia, Pennsylvania",
+                summary: "Basketball icon whose dedication, leadership, and inspiration reached far beyond sports."
+            },
+            {
+                name: "Michael Jackson",
+                years: "1958 - 2009",
+                birthYear: 1958,
+                location: "Gary, Indiana",
+                summary: "A transformative entertainer known as the 'King of Pop,' remembered for music and cultural impact."
+            },
+            {
+                name: "Frida Kahlo",
+                years: "1907 - 1954",
+                birthYear: 1907,
+                location: "Coyoacan, Mexico City",
+                summary: "Painter and cultural icon celebrated for powerful art, resilience, and identity."
+            },
+            {
+                name: "Stephen Hawking",
+                years: "1942 - 2018",
+                birthYear: 1942,
+                location: "Oxford, England",
+                summary: "Theoretical physicist remembered for groundbreaking work and extraordinary perseverance."
+            }
+        ];
+
+        function renderResults(items) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = '';
+
+            items.forEach(memorial => {
+                const card = document.createElement('div');
+                card.className = 'col-12';
+                card.innerHTML = `
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title mb-1">${memorial.name}</h5>
+                            <p class="card-text text-muted mb-2">${memorial.years} • ${memorial.location}</p>
+                            <p class="card-text">${memorial.summary}</p>
+                            <a href="#" class="btn btn-sm btn-primary">View Memorial</a>
+                        </div>
+                    </div>
+                `;
+                resultsContainer.appendChild(card);
+            });
+        }
+
+        function runSearch() {
+            const nameQuery = document.getElementById('searchName').value.trim().toLowerCase();
+            const birthYearQuery = document.getElementById('birthYear').value.trim();
+            const locationQuery = document.getElementById('location').value.trim().toLowerCase();
+
+            const filtered = memorials.filter(memorial => {
+                const nameMatches = !nameQuery || memorial.name.toLowerCase().includes(nameQuery);
+                const yearMatches = !birthYearQuery || String(memorial.birthYear) === birthYearQuery;
+                const locationMatches = !locationQuery || memorial.location.toLowerCase().includes(locationQuery);
+                return nameMatches && yearMatches && locationMatches;
+            });
+
+            if (filtered.length > 0) {
+                document.getElementById('searchResults').style.display = 'block';
+                document.getElementById('noResults').style.display = 'none';
+                renderResults(filtered);
+            } else {
+                document.getElementById('searchResults').style.display = 'none';
+                document.getElementById('noResults').style.display = 'block';
+            }
+        }
+
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            runSearch();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('searchResults').style.display = 'block';
+            document.getElementById('noResults').style.display = 'none';
+            renderResults(memorials);
+        });
+    </script>
+</body>
+</html>
+
+
