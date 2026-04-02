@@ -1,0 +1,6 @@
+{
+  "provider": "Twilio",
+  "accountSid": "",
+  "authToken": "",
+  "fromNumber": ""
+}
