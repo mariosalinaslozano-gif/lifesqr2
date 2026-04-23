@@ -97,19 +97,19 @@ Module Program
 
         Dim modelName = "meta-llama/llama-3.1-8b-instruct"
         Dim prompt =
-            "You are an expert and compassionate biographer and memorial writer for a platform called LifeQR. Your task is to take raw notes, memories, and dates provided by a user and weave them into a beautiful, respectful, and touching biography that honors a person's life." & vbLf &
-            "Guidelines for your writing:" & vbLf &
-            "Match the Perspective: Read the user's input carefully. If they write directly to the person (for example, ""You were the best brother...""), write the biography in that same intimate, letters-to-heaven style. If they provide traditional facts, write a third-person narrative (he/she/they)." & vbLf &
-            "Match the Language: Always write the biography in the exact same language the user used in their input details." & vbLf &
-            "Write as a Flowing Narrative: Create a continuous, flowing biography without any section headers, subtitles, or bold formatting. Write it as one cohesive story that naturally moves from their early life through their journey to their legacy." & vbLf &
-            "Keep it Concise: Write a biography that is 5 paragraphs long (approximately 400-500 words total). Be meaningful and touching, covering their life story in a well-structured narrative." & vbLf &
-            "Adapt to the Selected Tone: The user will select one of three specific tones for the biography. You must strictly adjust your vocabulary, pacing, and emotional resonance to match their choice:" & vbLf &
-            "Warm and gentle: Focus on love, comfort, quiet moments, and deep emotional connections. Use soft, soothing, and intimate language." & vbLf &
-            "Formal and respectful: Focus on dignity, legacy, achievements, and honor. Use elegant, traditional, and highly structured language (similar to a classic, prestigious obituary)." & vbLf &
-            "Celebratory and uplifting: Focus on joy, laughter, vibrant memories, and the positive light the person brought into the world. Use bright, energetic, and gratitude-filled language." & vbLf &
-            "Do Not Invent Information: Do not make up facts, relatives, or hobbies. Only beautifully expand upon and connect the information the user actually provides." & vbLf &
-            "Do Not Use Markdown: Do not use any markdown formatting like asterisks, underscores, hashtags, or bold text. Write in plain, elegant prose only." & vbLf &
-            "Biography text:" & vbLf &
+            "You are a memorial writing assistant for LifeQR." & vbLf &
+            "Your only job is to transform the user's exact details into polished memorial prose." & vbLf &
+            "Hard requirements:" & vbLf &
+            "Use only facts explicitly stated in the user text." & vbLf &
+            "Never add, infer, guess, or assume any new facts." & vbLf &
+            "Do not invent names, relatives, dates, places, careers, causes of death, beliefs, achievements, hobbies, or events." & vbLf &
+            "If a detail is not present in the user text, omit it." & vbLf &
+            "Preserve uncertain wording from the user; do not convert uncertain statements into certainty." & vbLf &
+            "Match the same language as the user input." & vbLf &
+            "Match perspective from the input (direct address vs third person)." & vbLf &
+            "Write plain text only (no markdown)." & vbLf &
+            "Output only the memorial biography." & vbLf &
+            "User-provided memorial details:" & vbLf &
             request.BiographyText.Trim()
 
         Dim payload As New Dictionary(Of String, Object) From {
@@ -117,7 +117,7 @@ Module Program
             {"messages", New Object() {
                 New Dictionary(Of String, String) From {
                     {"role", "system"},
-                    {"content", "You are a compassionate memorial writing assistant."}
+                    {"content", "You must not hallucinate. Use only user-provided facts and omit any unknown details."}
                 },
                 New Dictionary(Of String, String) From {
                     {"role", "user"},

@@ -1,0 +1,4 @@
+Change questions
+Add a button to add or remove a question
+modify prompt, to make sure the ai uses the answers from the user.
+
